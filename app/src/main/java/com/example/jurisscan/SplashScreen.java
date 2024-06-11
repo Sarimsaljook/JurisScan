@@ -6,6 +6,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 @SuppressLint("CustomSplashScreen")
 public class SplashScreen extends AppCompatActivity {
 
@@ -13,6 +16,8 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         // Create a new thread to handle the delay
         new Thread(() -> {
@@ -22,10 +27,16 @@ public class SplashScreen extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
-                // Start the main activity after the delay
-                Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-                startActivity(intent);
-                finish(); // Close the splash screen activity
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                // Check if user is logged in or not
+                if (currentUser != null) {
+                    Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(intent);
+                    finish(); // Close the splash screen activity
+                } else {
+                    startActivity(new Intent(SplashScreen.this, Login.class));
+                    finish();
+                }
             }
         }).start();
     }

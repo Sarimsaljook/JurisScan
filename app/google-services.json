@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "479276341644",
+    "project_id": "jurisscan",
+    "storage_bucket": "jurisscan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479276341644:android:8fb348f1451a94e0b5dea9",
+        "android_client_info": {
+          "package_name": "com.example.jurisscan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJl2AuTSd3QZeAhOfXq4WCJtUa9GUvPrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
