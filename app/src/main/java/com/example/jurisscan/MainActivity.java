@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
+import android.provider.OpenableColumns;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -95,8 +97,22 @@ public class MainActivity extends AppCompatActivity {
             Uri pdfUri = data.getData();
             try {
                 File file = copyToTempFile(pdfUri);
+
+                // Retrieve the display name of the file
+                String displayName = null;
+                Cursor cursor = getContentResolver().query(pdfUri, null, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (displayNameIndex != -1) {
+                        displayName = cursor.getString(displayNameIndex);
+                    }
+                    cursor.close();
+                }
+
                 Intent intent = new Intent(MainActivity.this, DocumentView.class);
                 intent.putExtra("pdfPath", file.getAbsolutePath());
+                intent.putExtra("pdfName", displayName);
+
                 startActivity(intent);
             } catch (IOException e) {
                 e.printStackTrace();

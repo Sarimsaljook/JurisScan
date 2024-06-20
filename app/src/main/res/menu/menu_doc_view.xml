@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_forward"
+        android:icon="@drawable/baseline_arrow_forward_ios_24"
+        android:title="Forward"
+        app:showAsAction="always" />
+</menu>
