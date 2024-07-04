@@ -110,15 +110,14 @@ public class DocumentView extends AppCompatActivity {
                 // Optionally, perform other animations or UI updates based on slideOffset
                 // Example: Translate other views along with drawer slide
 
-                // Example: recyclerView translation along with drawer slide
-                recyclerView.setTranslationX(slideOffset * drawerView.getWidth());
+
             }
         });
 
         recyclerView = findViewById(R.id.drawer_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        chatAdapter = new ChatAdapter(messageList);
+        chatAdapter = new ChatAdapter(this, messageList);
         recyclerView.setAdapter(chatAdapter);
 
         uploadPdfForKnowledgeBase(file);

@@ -1,5 +1,6 @@
 package com.example.jurisscan;
 // ChatAdapter.java
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,11 @@ import java.util.List;
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final List<ChatMessage> messages;
+    private Context mContext;
 
-    public ChatAdapter(List<ChatMessage> messages) {
+    public ChatAdapter(Context context, List<ChatMessage> messages) {
         this.messages = messages;
+        this.mContext = context;
     }
 
     @NonNull
@@ -60,6 +63,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public void bind(ChatMessage message) {
             messageTextView.setText(message.getMessage());
+            System.out.println("User message: " + message.getMessage());
         }
     }
 

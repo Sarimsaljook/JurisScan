@@ -36,6 +36,7 @@
             android:id="@+id/drawer_recycler_view"
             android:layout_width="300dp"
             android:layout_height="600dp"
+            android:background="#FFFFFF"
             android:padding="8dp" />
 
         <!-- EditText for user input -->
