@@ -55,6 +55,7 @@ public class DocumentView extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private final List<ChatMessage> messageList = new ArrayList<>();
     private String knowledgeBase;
+    private String pdfPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class DocumentView extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        String pdfPath = getIntent().getStringExtra("pdfPath");
+        pdfPath = getIntent().getStringExtra("pdfPath");
         pdfName = getIntent().getStringExtra("pdfName");
         if (pdfPath != null) {
             file = new File(pdfPath);
@@ -266,11 +267,12 @@ public class DocumentView extends AppCompatActivity {
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("user_id", userId)
+                    .addFormDataPart("file_path", pdfPath)
                     .addFormDataPart("file", pdfName, fileBody)
                     .build();
 
             Request request = new Request.Builder()
-                    .url("https://thirty-onions-hope.loca.lt/upload/")
+                    .url("https://10.0.2.2/upload/")
                     .post(requestBody)
                     .build();
 
