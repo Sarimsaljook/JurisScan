@@ -47,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         Button buttonSelectPdf = findViewById(R.id.openPdfViewer);
+        Button buttonPastUploads = findViewById(R.id.viewPastUploads);
 
-        buttonSelectPdf.setOnClickListener((View.OnClickListener) v -> selectPdf());
+        buttonSelectPdf.setOnClickListener(v -> selectPdf());
+        buttonPastUploads.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, PastUploadsList.class)));
     }
 
     @Override
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, DocumentView.class);
                 intent.putExtra("pdfPath", file.getAbsolutePath());
                 intent.putExtra("pdfName", displayName);
+                intent.putExtra("source_activity", "MainActivity");
 
                 startActivity(intent);
             } catch (IOException e) {

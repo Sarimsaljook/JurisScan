@@ -56,6 +56,7 @@ public class DocumentView extends AppCompatActivity {
     private final List<ChatMessage> messageList = new ArrayList<>();
     private String knowledgeBase;
     private String pdfPath;
+    private String sourceActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,8 @@ public class DocumentView extends AppCompatActivity {
         progressDialog.setMessage("Saving Your Work...");
         progressDialog.setCancelable(false);
 
+        sourceActivity = getIntent().getStringExtra("source_activity");
+
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
@@ -85,7 +88,7 @@ public class DocumentView extends AppCompatActivity {
                 .build();
 
         // Initialize Retrofit
-        String BASE_URL = "https://a48d-70-18-228-97.ngrok-free.app/";
+        String BASE_URL = "https://013c-70-18-228-97.ngrok-free.app/";
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
@@ -224,8 +227,11 @@ public class DocumentView extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_doc_view, menu);
+        if(sourceActivity.equals("PastUploadsList")) {
+            getMenuInflater().inflate(R.menu.menu_doc_view_alt, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_doc_view, menu);
+        }
         return true;
     }
 
@@ -236,9 +242,10 @@ public class DocumentView extends AppCompatActivity {
         // Handle action bar item clicks here
         if (id == R.id.action_forward) {
             // Handle the forward button click
-            // Add your forward action logic here
             uploadPdf();
             return true;
+        } else if (id == R.id.action_back) {
+            startActivity(new Intent(DocumentView.this, MainActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -272,11 +279,12 @@ public class DocumentView extends AppCompatActivity {
                     .build();
 
             Request request = new Request.Builder()
-                    .url("https://10.0.2.2/upload/")
+                    .url("https://jurisscanapi.loca.lt/upload/")
                     .post(requestBody)
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
+                System.out.println(response);
                 return response.isSuccessful();
             } catch (IOException e) {
                 e.printStackTrace();
