@@ -44,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
         Button buttonSelectPdf = findViewById(R.id.openPdfViewer);
         Button buttonPastUploads = findViewById(R.id.viewPastUploads);
+        Button buttonOpenGenericAIChatWindow = findViewById(R.id.openGenericChatBot);
 
         buttonSelectPdf.setOnClickListener(v -> selectPdf());
         buttonPastUploads.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, PastUploadsList.class)));
+        buttonOpenGenericAIChatWindow.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ChatBot.class)));
     }
 
     @Override

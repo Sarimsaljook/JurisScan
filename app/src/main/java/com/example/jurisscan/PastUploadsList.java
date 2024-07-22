@@ -48,12 +48,14 @@ public class PastUploadsList extends AppCompatActivity {
                     recyclerView.setAdapter(fileAdapter);
                 } else {
                     Toast.makeText(PastUploadsList.this, "Error fetching files", Toast.LENGTH_SHORT).show();
+                    System.out.println(response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<FileResponse> call, Throwable t) {
                 Toast.makeText(PastUploadsList.this, "Network error", Toast.LENGTH_SHORT).show();
+                System.out.println(t.getMessage());
             }
         });
     }

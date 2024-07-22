@@ -17,6 +17,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Region;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,6 +66,8 @@ public class DocumentView extends AppCompatActivity {
     private String knowledgeBase;
     private String pdfPath;
     private String sourceActivity;
+    private TransferUtility transferUtility;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,15 +117,9 @@ public class DocumentView extends AppCompatActivity {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 // Respond when the drawer's position changes
-                // For example, adjust main content alpha based on slide offset
                 float alpha = 1 - slideOffset; // Decrease alpha as drawer slides in
                 // Apply alpha to the main content view (e.g., pdfView)
                 pdfView.setAlpha(alpha);
-
-                // Optionally, perform other animations or UI updates based on slideOffset
-                // Example: Translate other views along with drawer slide
-
-
             }
         });
 
@@ -133,6 +138,20 @@ public class DocumentView extends AppCompatActivity {
             sendChatMessage(userMessage.getText().toString());
             userMessage.setText("");
         });
+
+        String accessKey = "AKIA4MY5LTISA4577QUT";
+        String secretKey = "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";
+        String region = "us-east-1"; // AWS region
+
+        // Create AWS credentials
+        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+
+        // Create an AmazonS3 client
+       AmazonS3 s3Client = new AmazonS3Client(awsCredentials, Region.getRegion(region));
+       transferUtility = TransferUtility.builder().context(getApplicationContext())
+                .s3Client(s3Client).build();
+
+        TransferNetworkLossHandler.getInstance(getApplicationContext());
     }
 
     private void uploadPdfForKnowledgeBase(File file) {
@@ -255,6 +274,38 @@ public class DocumentView extends AppCompatActivity {
         new UploadPdfTask().execute(file);
     }
 
+    private void uploadToS3(File file) {
+        // Upload the file to S3
+        TransferObserver uploadObserver = transferUtility.upload(
+                "jurisscan-knowlegebase-storage", // The S3 bucket to upload to
+                file.getName(),         // The key for the uploaded object
+                file                // The file where the data to upload exists
+        );
+
+        uploadObserver.setTransferListener(new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (state == TransferState.COMPLETED) {
+                    // Handle successful upload
+                    System.out.println("Upload To S3 Successful!");
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                int percentDone = (int)percentDonef;
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                // Handle errors
+                Toast.makeText(DocumentView.this, "Upload to S3 failed", Toast.LENGTH_SHORT).show();
+                ex.printStackTrace();
+            }
+        });
+    }
+
     @SuppressLint("StaticFieldLeak")
     private class UploadPdfTask extends AsyncTask<File, Void, Boolean> {
         @Override
@@ -264,6 +315,9 @@ public class DocumentView extends AppCompatActivity {
         }
         @Override
         protected Boolean doInBackground(File... files) {
+
+            uploadToS3(file);
+
             File pdfFile = files[0];
             String userId = mAuth.getUid(); // Firebase UID
 
