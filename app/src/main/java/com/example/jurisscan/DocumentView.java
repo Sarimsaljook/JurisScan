@@ -139,8 +139,8 @@ public class DocumentView extends AppCompatActivity {
             userMessage.setText("");
         });
 
-        String accessKey = "AKIA4MY5LTISA4577QUT";
-        String secretKey = "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";
+        String accessKey = "AKIA4MY5LTISDCDAGV4K";
+        String secretKey = "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";
         String region = "us-east-1"; // AWS region
 
         // Create AWS credentials
@@ -282,6 +282,8 @@ public class DocumentView extends AppCompatActivity {
                 file                // The file where the data to upload exists
         );
 
+        System.out.println(uploadObserver.getBucket());
+
         uploadObserver.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
@@ -294,7 +296,6 @@ public class DocumentView extends AppCompatActivity {
             @Override
             public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                 float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
-                int percentDone = (int)percentDonef;
             }
 
             @Override
