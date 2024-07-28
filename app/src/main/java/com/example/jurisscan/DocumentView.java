@@ -139,8 +139,8 @@ public class DocumentView extends AppCompatActivity {
             userMessage.setText("");
         });
 
-        String accessKey = "AKIA4MY5LTISDCDAGV4K";
-        String secretKey = "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";
+        String accessKey = "XXXXXXXXXXXXXXXXXXXXXXX";
+        String secretKey = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx";
         String region = "us-east-1"; // AWS region
 
         // Create AWS credentials
